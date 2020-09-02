@@ -12,11 +12,12 @@ export default class Register extends React.Component{
         badg: null, 
         selectedValue: null,
         label: 'القسم',
-        code: null,
+        code: '',
         MacAddress: null,
         modalVisibal: false,
         pickerIOS: false,
         departments: [],
+        image: '',
     }
     addKeys = (val, key)=>({key: key, ...val})
     getDep = async ()=>{
@@ -54,6 +55,7 @@ export default class Register extends React.Component{
             base64: true,
           });
           if (!result.cancelled) {
+              console.log(result.base64)
             this.setState({ image: result.base64 });
             this.showModal()
           }
@@ -71,6 +73,7 @@ export default class Register extends React.Component{
             base64: true,
           });
           if (!result.cancelled) {
+            console.log(result.base64)
             this.setState({ image: result.base64 });
             this.showModal()
           }
@@ -106,22 +109,23 @@ export default class Register extends React.Component{
                         if(this.state.selectedValue !== null){
                             if (this.state.code.length === 6){
                                 this.setState({loading: true})
-                                try{
-                                    const data = new FormData()
-                                    data.append('DepartmentId' , this.state.selectedValue)
-                                    data.append('FullName', this.state.name)
-                                    data.append('PhoneNumber', this.state.phone)
-                                    data.append('CardId', this.state.badg)
-                                    data.append('OTPCode', this.state.code)
-                                    data.append('MacAddress',  this.state.MacAddress)
-                                    data.append('PersonalPicture', this.state.image)
-                                    const response = await fetch('http://95.217.118.111/api/Employees/AddEmployee', {
+                                try{                                    
+                                    const response = await fetch("http://95.217.118.111/api/Employees/AddEmployee", {
+                                        headers: { 'Content-Type': 'application/json' },
                                         method: 'POST',
-                                        headers: {'content-type': 'multipart/form-data'},
-                                        body: data,
+                                        body: JSON.stringify({
+                                            "DepartmentId": this.state.selectedValue,
+                                            "FullName": this.state.name,
+                                            "PhoneNumber": this.state.phone,
+                                            "CardId": this.state.badg,
+                                            "OTPCode": this.state.code,
+                                            "MacAddress": this.state.MacAddress,
+                                            "ImageBase64": `${this.state.image}`,
+                                        })                                        
                                     })
                                     const result = await response.json()
                                     if (result.code === 200){
+                                        console.log(result)
                                         this.props.navigation.navigate('Login')
                                         return true
                                     }else{

@@ -38,6 +38,7 @@ export default class Login extends React.Component{
                     body: data,
                 })
                 const result = await response.json()
+                console.log(result)
                 if (result.code===200){
                     this.props.navigation.navigate('User', {...this.state})
                     return true
