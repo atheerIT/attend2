@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import {Progress, Button} from './button';
 
+
 export default class Register extends React.Component{
     state = {
         name: "",
@@ -17,7 +18,7 @@ export default class Register extends React.Component{
         modalVisibal: false,
         pickerIOS: false,
         departments: [],
-        image: '',
+        image: null,
     }
     addKeys = (val, key)=>({key: key, ...val})
     getDep = async ()=>{
@@ -48,14 +49,13 @@ export default class Register extends React.Component{
     pickImage = async () => {
         try {
           let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [3, 4],
-            quality: 1,
-            base64: true,
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [3, 4],
+              quality: 1,
+              base64: true,
           });
           if (!result.cancelled) {
-              console.log(result.base64)
             this.setState({ image: result.base64 });
             this.showModal()
           }
@@ -73,7 +73,6 @@ export default class Register extends React.Component{
             base64: true,
           });
           if (!result.cancelled) {
-            console.log(result.base64)
             this.setState({ image: result.base64 });
             this.showModal()
           }
@@ -109,27 +108,28 @@ export default class Register extends React.Component{
                         if(this.state.selectedValue !== null){
                             if (this.state.code.length === 6){
                                 this.setState({loading: true})
-                                try{                                    
+                                try{        
+                                    const data = JSON.stringify({
+                                        "DepartmentId":this.state.selectedValue,
+                                        "FullName":this.state.name,
+                                        "PhoneNumber":this.state.phone,
+                                        "CardId":this.state.badg,
+                                        "OTPCode":this.state.code,
+                                        "MacAddress":this.state.MacAddress,
+                                        "ImageBase64":"data:image/jpeg;base64,"+this.state.image
+                                    }) 
+
                                     const response = await fetch("http://95.217.118.111/api/Employees/AddEmployee", {
-                                        headers: { 'Content-Type': 'application/json' },
                                         method: 'POST',
-                                        body: JSON.stringify({
-                                            "DepartmentId": this.state.selectedValue,
-                                            "FullName": this.state.name,
-                                            "PhoneNumber": this.state.phone,
-                                            "CardId": this.state.badg,
-                                            "OTPCode": this.state.code,
-                                            "MacAddress": this.state.MacAddress,
-                                            "ImageBase64": `${this.state.image}`,
-                                        })                                        
+                                        headers: {"Content-Type": "application/json"},                            
+                                        body: data                             
                                     })
                                     const result = await response.json()
                                     if (result.code === 200){
-                                        console.log(result)
-                                        this.props.navigation.navigate('Login')
+                                        this.props.navigation.navigate('User', {registerId: result.data.registerId})
                                         return true
                                     }else{
-                                        console.log(result)
+                                        Alert.alert(result.message)
                                     }
                                     
                                 }

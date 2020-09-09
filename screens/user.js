@@ -1,13 +1,14 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Image, View, TouchableOpacity, Text, Alert} from 'react-native';
+import { StyleSheet, Image, View, Alert} from 'react-native';
 
 export default class User extends React.Component{
   state = {
-    img: null,
+    registerId: null,
+    QRcode: null,
   }
   componentDidMount(){
-    this.setState(prevStat=>({img: prevStat.img, ...this.props.route.params}))
+    this.setState({registerId: this.props.route.params.registerId})
     this.getQR()
     this.timer = setInterval(this.getQR, 60000)
   }
@@ -15,11 +16,10 @@ export default class User extends React.Component{
     clearInterval(this.timer)
   }
   getQR = async ()=>{
-    this.setState({img: null})
+    this.setState({QRcode: null})
     try{
       const data = new FormData()
-      data.append('MacAddress', this.state.MacAddress)
-      data.append('CardId', this.state.badg)
+      data.append('registerId', this.state.registerId)
       const response = await fetch('http://95.217.118.111/api/employees/GetQRCode', {
           method: 'POST',
           headers: {'content-type': 'multipart/form-data'},
@@ -27,24 +27,19 @@ export default class User extends React.Component{
       })
       const result = await response.json()
       if (result.code===200){
-        console.log(result)
-          //this.setState({img: result.registerId})
+        this.setState({QRcode: result.data})
       }else{
-        console.log(result)
-        //this.props.navigation.navigate('User', {...this.state})
-          //Alert.alert(result.message)
+        Alert.alert(result.message)
       }
   }catch (err){
       Alert.alert(err.message)
   }           
   }
-  onLogout = ()=>{
-    console.log(this.state)
-  }
+  
     render(){
         return(
             <View style={styles.screen}>
-             {this.state.img===null ?(<Image source={require('../img/Curve-Loading.gif')} style={{width: 300, height: 300}}/>):(<Image source={{uri: 'data:image/jpg;base64,'+ this.state.img}} style={{width: 300, height: 300}}/>)}
+             {this.state.QRcode===null ?(<Image source={require('../img/Curve-Loading.gif')} style={{width: 500, height: 500}}/>):(<Image source={{uri: 'data:image/jpeg;base64,'+ this.state.QRcode}} style={{width: 300, height: 300}}/>)}
             </View>
           )
     }
