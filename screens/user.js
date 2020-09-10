@@ -1,11 +1,19 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Image, View, Alert} from 'react-native';
+import { StyleSheet, Image, View, Alert, Animated} from 'react-native';
 
 export default class User extends React.Component{
   state = {
     registerId: null,
     QRcode: null,
+    width: new Animated.Value(1),
+  }
+  animation = ()=>{
+    Animated.timing(this.state.width, {
+      toValue: 0,
+      duration: 60000,
+      useNativeDriver: true
+    }).start()
   }
   componentDidMount(){
     this.setState({registerId: this.props.route.params.registerId})
@@ -28,6 +36,7 @@ export default class User extends React.Component{
       const result = await response.json()
       if (result.code===200){
         this.setState({QRcode: result.data})
+        this.animation()
       }else{
         Alert.alert(result.message)
       }
@@ -39,7 +48,16 @@ export default class User extends React.Component{
     render(){
         return(
             <View style={styles.screen}>
-             {this.state.QRcode===null ?(<Image source={require('../img/Curve-Loading.gif')} style={{width: 500, height: 500}}/>):(<Image source={{uri: 'data:image/jpeg;base64,'+ this.state.QRcode}} style={{width: 300, height: 300}}/>)}
+             {this.state.QRcode===null ?(
+             <Image source={require('../img/Curve-Loading.gif')} style={{width: 500, height: 500}}/>
+             ):(
+              <>
+              <Animated.View style={[{width: 310, height: 310, backgroundColor: '#0086b3', borderRadius: 5},{
+                transform: [{ scaleX: this.state.width }]
+              } ]} />
+             <Image source={{uri: 'data:image/jpeg;base64,'+ this.state.QRcode}} style={{width: 300, height: 300, position: 'absolute'}}/>
+             </>
+             )}
             </View>
           )
     }

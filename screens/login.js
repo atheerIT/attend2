@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, View, TextInput, KeyboardAvoidingView, Alert, Image } from 'react-native';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
 import {Progress} from './button';
 import * as SecureStore from 'expo-secure-store';
 
@@ -10,21 +10,7 @@ export default class Login extends React.Component{
         badg: '',
         code: '',
         MacAddress: null,
-        isValid: true,
     }
-    checkStorge = async ()=>{
-        try{
-          const registerId = await SecureStore.getItemAsync('registerId')
-          if (registerId !== null){
-            this.props.navigation.navigate('User', {registerId: registerId})
-          }else{
-            this.setState(prevState =>({isValid: !prevState}))
-          }
-        }
-        catch (err){
-          Alert.alert(err.message)
-        }
-      }
     sStore = async (key, value)=>{
       try{
         await SecureStore.setItemAsync(key, value)
@@ -45,7 +31,6 @@ export default class Login extends React.Component{
     }
     componentDidMount(){
         this.setState({MacAddress: this.props.route.params.MacAddress})
-        this.checkStorge()
     }
     
     onpress = async ()=>{
@@ -63,7 +48,6 @@ export default class Login extends React.Component{
                 })
                 const result = await response.json()
                 if (result.code===200){
-                    //this.sStore('timeStamp', Date.now())
                     this.sStore('registerId', result.data.registerId)
                     this.props.navigation.navigate('User', {registerId: result.data.registerId})
                     return true
@@ -81,18 +65,12 @@ export default class Login extends React.Component{
     render(){
         return (
             <View style={styles.screen}>
-            {this.state.isValid? (
-              <Image style={styles.logo} source={require('../img/INSSLogo.jpg')}/>
-              ):(
-                <View style={styles.screen}>
               <KeyboardAvoidingView keyboardVerticalOffset='500'>
                 <TextInput style={styles.input} placeholder="رقم الباج" keyboardType='numeric' value={this.state.badg} onChangeText={this.handelbadg} />
                 <TextInput style={styles.input} placeholder="رمز التحقق" keyboardType='numeric' value={this.state.code} onChangeText={this.handelcode} />
               </KeyboardAvoidingView>
               <Progress onPress={this.onpress} title='تسجيل دخول'/>
               </View>
-              )}
-            </View>
           )
     }
     

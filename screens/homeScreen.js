@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Alert, Platform} from 'react-native';
 import * as Permissions from 'expo-permissions';
-import {Button} from './button';
+import {Button, Progress} from './button';
 import * as Application from 'expo-application';
 import * as Network from 'expo-network';
 import * as SecureStore from 'expo-secure-store';
@@ -43,8 +43,15 @@ export default class HomeScreen extends React.Component {
     this.getPermission()
     
 }
-    onlogin = ()=>{
-        return this.props.navigation.navigate('Login', {MacAddress: this.state.MacAddress})
+    onlogin = async ()=>{
+      const registerID = await SecureStore.getItemAsync('registerId')
+      if (registerID !== null){
+        this.props.navigation.navigate('User', {registerId: registerID})
+        return true
+      }else{
+        this.props.navigation.navigate('Login', {MacAddress: this.state.MacAddress})
+        return true
+      }
     }
     onRegister = ()=>{
       this.props.navigation.navigate('Register', {MacAddress: this.state.MacAddress})
@@ -52,14 +59,11 @@ export default class HomeScreen extends React.Component {
     render(){
         return (
             <View style={styles.screen}>
-             
-              <View style={styles.screen}>
               <Image style={styles.logo} source={require('../img/INSSLogo.jpg')}/>
               <Text style={styles.space}>برنامج تسجيل حضور الموظفين</Text>
               <View style={styles.row}>
-                <Button onPress={this.onlogin} title='تسجيل دخول'/>
+                <Progress onPress={this.onlogin} title='تسجيل دخول'/>
                 <Button onPress={this.onRegister} title='انشاء حساب'/>
-              </View>
               </View>
             </View>
           )
@@ -68,7 +72,7 @@ export default class HomeScreen extends React.Component {
   }
 
   const styles = StyleSheet.create({
-    screen: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+    screen: {flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff'},
     logo: {width: 200, height: 200, margin: 20},
     space:{marginVertical: 20},
     row: {flexDirection: 'row', justifyContent: 'space-between'},
