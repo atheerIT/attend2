@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "attend2",
+    "name": "تسجيل حضور",
     "slug": "attend2",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,10 +17,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "it.attend.employee"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "sdkVersion": "38.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "it.attend.employee"
     }
   }
 }

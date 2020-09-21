@@ -17,9 +17,9 @@ export default class App extends React.Component {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Home" component={HomeScreen} options={{title: 'My home', headerShown: false}}/>
-          <Stack.Screen name="Login" component={Login} options={{title: "تسجيل دخول"}} />
-          <Stack.Screen name="Register" component={Register} options={{title: "انشاء حساب"}}/>
-          <Stack.Screen name="User" component={User} options={{title: "QRC"}}/>
+          <Stack.Screen name="Login" component={Login} options={{title: "تسجيل دخول", headerBackTitleVisible: false}} />
+          <Stack.Screen name="Register" component={Register} options={{title: "انشاء حساب", headerBackTitleVisible: false}}/>
+          <Stack.Screen name="User" component={User} options={{title: "QRC", headerBackTitleVisible: false}}/>
         </Stack.Navigator>
         <StatusBar style="auto"/>
     </NavigationContainer>

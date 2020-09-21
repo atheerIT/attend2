@@ -4,6 +4,7 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, TextInput, KeyboardAvoi
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import {Progress, Button} from './button';
+import { AntDesign } from '@expo/vector-icons';
 
 
 export default class Register extends React.Component{
@@ -170,8 +171,9 @@ export default class Register extends React.Component{
     setLabel = val =>{
         this.setState({selectedValue: val})
         const lable = this.state.departments.filter(dep=> dep.departmentId === val)
+        console.log(lable)
         if (lable.length !==0) {
-            this.setState({lable: lable[0].departmentName})
+            this.setState({label: lable[0].departmentName})
         }
     }
     render(){
@@ -195,17 +197,27 @@ export default class Register extends React.Component{
                             <Picker.Item label={dep.departmentName} value={dep.departmentId} key={dep.key} />
                         ))}
                         </PickerIOS>
-                        <Button onPress={this.showPicker} title='حفظ'/>
-                        <Button onPress={this.cancelIOS} title='الغاء'/>
+                        <View style={{alignItems: 'center'}}>
+                            <Button onPress={this.showPicker} title='حفظ'/>
+                            <Button onPress={this.cancelIOS} title='الغاء'/>
+                        </View>
                     </View>
                 </View>
             </Modal>
               <KeyboardAvoidingView>
-                  <TextInput style={styles.input} placeholder="الاسم الكامل" value={this.state.name} onChangeText={this.handelname} />
-                  <TextInput style={styles.input} placeholder="رقم الهاتف" keyboardType='numeric' value={this.state.phone} onChangeText={this.handelphone} />
-                  <TextInput style={styles.input} placeholder="رقم الباج" keyboardType='numeric' value={this.state.badg} onChangeText={this.handelbadg} />
+                  <Text style={styles.textStyle}>الاسم الكامل</Text>
+                  <TextInput style={styles.input} placeholder="الاسم المكتوب في الباج" value={this.state.name} onChangeText={this.handelname} />
+                  <Text style={styles.textStyle}>رقم الهاتف</Text>
+                  <TextInput style={styles.input} placeholder="ادخال الارقام بالانكليزية" keyboardType='numeric' value={this.state.phone} onChangeText={this.handelphone} />
+                  <Text style={styles.textStyle}>رقم الباج</Text>
+                  <TextInput style={styles.input} placeholder="ادخال الارقام بالانكليزية" keyboardType='numeric' value={this.state.badg} onChangeText={this.handelbadg} />
                     {Platform.OS === 'ios'? (
-                        <TouchableOpacity style={styles.butn} onPress={this.showPicker}><Text>{this.state.label}</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.butn} onPress={this.showPicker}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                                <AntDesign name="caretdown" size={15} color="#3e7896"  />
+                                <Text style={{textAlign: 'right'}}>{this.state.label}</Text>
+                            </View>
+                        </TouchableOpacity>
                     ):(
                         <Picker
                         mode='dropdown'
@@ -219,7 +231,8 @@ export default class Register extends React.Component{
                         ))}
                     </Picker> 
                     )}
-                  <TextInput style={styles.input} placeholder="رمز التحقق" keyboardType='numeric' value={this.state.code} onChangeText={this.handelcode} />
+                    <Text style={styles.textStyle}>رمز التحقق</Text>
+                  <TextInput style={styles.input} placeholder="يؤخذ من ضابط الامن" keyboardType='numeric' value={this.state.code} onChangeText={this.handelcode} />
                   <View style={{alignItems: 'center'}}>
                     <Button onPress={this.showModal} title='صورة'/>
                     <Progress onPress={this.onSave} title='حفظ البيانات'/>
@@ -244,28 +257,36 @@ export default class Register extends React.Component{
     },
     butn: {
         marginVertical: 5, 
-        marginHorizontal: 5, 
-        backgroundColor: '#8cb2ed', 
-        padding: 20, 
-        borderRadius: 5
+        marginHorizontal: 5,
+        padding: 15, 
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#57a9d4',
+        backgroundColor: '#aad3ea',
     },
     input: {
         borderWidth: 1, 
-        margin: 5, 
+        margin: 10, 
         height: 40, 
         width: 300, 
-        padding: 10
+        padding: 10,
+        borderRadius: 10,
+        textAlign: 'right'
     },
     modalView: {
-        margin: 20,
+        margin: 1,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
+        padding: 30,
         width: 300,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
           height: 2
         },
+    },
+    textStyle: {
+        fontSize: 18,
+        textAlign: 'right',
     }
   });

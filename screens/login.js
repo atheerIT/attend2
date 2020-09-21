@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, View, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, KeyboardAvoidingView, Alert, Text } from 'react-native';
 import {Progress} from './button';
 import * as SecureStore from 'expo-secure-store';
 
@@ -66,8 +66,10 @@ export default class Login extends React.Component{
         return (
             <View style={styles.screen}>
               <KeyboardAvoidingView keyboardVerticalOffset='500'>
-                <TextInput style={styles.input} placeholder="رقم الباج" keyboardType='numeric' value={this.state.badg} onChangeText={this.handelbadg} />
-                <TextInput style={styles.input} placeholder="رمز التحقق" keyboardType='numeric' value={this.state.code} onChangeText={this.handelcode} />
+                  <Text style={styles.textStyle}>رقم الباج</Text>
+                <TextInput style={styles.input} placeholder="يرجى ادخال الرقم بالانكليزية" keyboardType='numeric' value={this.state.badg} onChangeText={this.handelbadg} />
+                <Text style={styles.textStyle}>رمز التحقق</Text>
+                <TextInput style={styles.input} placeholder="يؤخذ من ضابط الامن" keyboardType='numeric' value={this.state.code} onChangeText={this.handelcode} />
               </KeyboardAvoidingView>
               <Progress onPress={this.onpress} title='تسجيل دخول'/>
               </View>
@@ -79,6 +81,7 @@ export default class Login extends React.Component{
   const styles = StyleSheet.create({
     screen: {flex: 1, alignItems: 'center', justifyContent: 'center'},
     butn: {marginVertical: 10, marginHorizontal: 10, backgroundColor: '#8cb2ed', padding: 20, borderRadius: 5},
-    input: {borderWidth: 1, margin: 15, height: 40, width: 300, padding: 10},
+    input: {borderWidth: 1, margin: 15, height: 40, width: 300, padding: 10, borderRadius: 10, textAlign: 'right'},
     logo: {width: 200, height: 200, margin: 20},
+    textStyle: {fontSize: 18, textAlign: 'right'},
   });

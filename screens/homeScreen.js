@@ -74,8 +74,8 @@ export default class HomeScreen extends React.Component {
   const styles = StyleSheet.create({
     screen: {flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff'},
     logo: {width: 200, height: 200, margin: 20},
-    space:{marginVertical: 20},
+    space:{marginVertical: 20, fontSize: 18},
     row: {flexDirection: 'row', justifyContent: 'space-between'},
     butn: {marginVertical: 10, marginHorizontal: 10, backgroundColor: '#8cb2ed', padding: 20, borderRadius: 5},
-    input: {borderWidth: 1, margin: 15, height: 40, width: 300, padding: 10}
+    input: {borderWidth: 1, margin: 15, height: 40, width: 300, padding: 10},
   });
